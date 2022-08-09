@@ -2,3 +2,4 @@ django
 mysqlclient
 django-environ
 hashlib
+requests

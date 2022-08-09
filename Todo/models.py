@@ -15,10 +15,10 @@ class Members(models.Model):
         return f'{self.id} | {self.username}'
 
 
-class TodoApp(models.Model):
+class Task(models.Model):
     user = models.ForeignKey(Members, on_delete=models.CASCADE)
     text = models.TextField()
-    Priority = models.CharField(max_length=20)
+    priority = models.CharField(max_length=20)
     date = models.DateField(auto_now_add=True)
     done = models.BooleanField(default=False)
 
