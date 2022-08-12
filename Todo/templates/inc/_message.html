@@ -1,25 +1,31 @@
-{#    messages from others views#}
-<style>
-    .box {
-        width: 50rem;
-        background-color: #f0f3f4;
-        text-align: center;
-        padding: 40px;
-        margin: 0 50%;
-    }
-</style>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li
-                    {% if message.tags == 'success' %}class="text-success box"
-                    {% elif message.tags == 'order success' %}class="text-success box"
-                    {% elif message.tags == 'warning' %}class="text-danger box"
-                    {% elif message.tags %} class="{{ message.tags }} box"
-                    {% endif %}>
+{% load static %}
 
-                {{ message }}
-            </li>
-        {% endfor %}
-    </ul>
+<script src="{% static 'js/plugins/pace.min.js' %}"></script>
+<script src="{% static 'fonts/Web/js/all.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/plugins/bootstrap-notify.min.js' %}"></script>
+
+{% if messages %}
+
+    {% for message in messages %}
+        <script>
+
+            $.notify({
+                title: "Message : ",
+                message: "{{ message }}",
+                icon:
+                    {% if message.tags == 'success' %}"fa-solid fa-check mr-2"
+                        {% elif message.tags == 'warning' %}"fa-solid fa-exclamation mr-2"
+                        {% elif message.tags == 'error' %}"fa-solid fa-xmark mr-2"
+                    {% else %} "fa-solid fa-message-dots mr-2"
+                    {% endif %}
+            }, {
+                type: {% if message.tags == 'success' %}"success"
+                    {% elif message.tags == 'warning' %}"warning text-dark"
+                    {% elif message.tags == 'error' %}"danger"
+                {% else %} "info"
+                {% endif %},
+            });
+
+        </script>
+    {% endfor %}
 {% endif %}

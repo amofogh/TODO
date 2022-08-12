@@ -13,8 +13,7 @@ from .auth_methods import convert_to_hash
 
 def Todo_todo(request):
     context = {}
-
-    if not request.session["login"]:
+    if not request.session.get('login'):
         return redirect(reverse('Todo:login'))
 
     return render(request, 'Todo.html', context)
@@ -22,57 +21,55 @@ def Todo_todo(request):
 
 def Todo_login(request):
     context = {
-        'site-setting': settings.RECAPTCHA_SITE_KEY,
+        'site_key': settings.RECAPTCHA_SITE_KEY,
     }
 
     if request.POST:
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        secret_key = settings.RECAPTCHA_SECRET_KEY
-
-        # todo check this
         # captcha verification
+        secret_key = settings.RECAPTCHA_SECRET_KEY
         data = {
             'response': request.POST.get('g-recaptcha-response'),
             'secret': secret_key
         }
         resp = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
         result_json = resp.json()
-
         print(result_json)
-
-        if not result_json.get('success'):
-            pass
-            # return render(request, 'contact_sent.html', {'is_robot': True})
         # end captcha verification
-
-        password = convert_to_hash(password)
-
-        try:
-            member = Members.objects.get(username=username)
-            if password == member.password:
-                request.session["login"] = True
-                request.session["id"] = member.id
-                request.session.set_expiry(24 * 60 * 60)
-                return redirect(reverse('Todo:todo'))
+        if not result_json.get('success'):
+            if result_json.get('error-codes')[0] == 'timeout-or-duplicate':
+                messages.add_message(request, messages.WARNING, 'Timeout try again')
             else:
-                request.session["login"] = False
-                request.session["id"] = None
-                messages.add_message(request, messages.ERROR, 'Password is incorrect')
+                messages.add_message(request, messages.ERROR, 'Captcha error please try again')
+        else:
+            password = convert_to_hash(password)
 
-        except Members.DoesNotExist:
-            messages.add_message(request, messages.ERROR, 'User does not exist')
+            try:
+                member = Members.objects.get(username=username)
+                if password == member.password:
+                    request.session['login'] = True
+                    request.session['id'] = member.id
+                    request.session.set_expiry(24 * 60 * 60)
+                    return redirect(reverse('Todo:todo'))
+                else:
+                    request.session['login'] = False
+                    request.session['id'] = None
+                    messages.add_message(request, messages.ERROR, 'Password is incorrect')
+
+            except Members.DoesNotExist:
+                messages.add_message(request, messages.ERROR, 'User does not exist')
 
     return render(request, 'login.html', context)
 
 
 def Todo_add_task(request):
-    if not request.session["login"]:
+    if not request.session.get('login'):
         return redirect(reverse('Todo:login'))
 
     if request.POST:
-        user_id = request.session["id"]
+        user_id = request.session.get('id')
         text = request.Post.get('text')
         priority = request.Post.get('priority')
 
@@ -81,7 +78,7 @@ def Todo_add_task(request):
 
 
 def Todo_check_Task(request):
-    if not request.session["login"]:
+    if not request.session.get('login'):
         return redirect(reverse('Todo:login'))
 
     if request.POST:
@@ -99,7 +96,7 @@ def Todo_check_Task(request):
 
 
 def Todo_edit_task(request):
-    if not request.session["login"]:
+    if not request.session.get('login'):
         return redirect(reverse('Todo:login'))
 
     if request.POST:
