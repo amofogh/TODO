@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 
-class Members(models.Model):
+class Member(models.Model):
     name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)
     email = models.EmailField()
@@ -16,7 +16,7 @@ class Members(models.Model):
 
 
 class Task(models.Model):
-    user = models.ForeignKey(Members, on_delete=models.CASCADE)
+    user = models.ForeignKey(Member, on_delete=models.CASCADE)
     text = models.TextField()
     priority = models.CharField(max_length=20)
     date = models.DateField(auto_now_add=True)

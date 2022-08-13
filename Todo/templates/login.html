@@ -4,16 +4,7 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" type="text/css"
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
+    {% include 'inc/_headerReferences.html' %}
 
     <title>Login</title>
 </head>
@@ -36,21 +27,22 @@
             <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>SIGN IN</h3>
             <div class="form-group">
                 <label class="control-label">USERNAME</label>
-                <input class="form-control" type="text" placeholder="Username" autofocus>
+                <input class="form-control" name="username" type="text" placeholder="Username" autofocus>
             </div>
             <div class="form-group">
                 <label class="control-label">PASSWORD</label>
-                <input class="form-control" type="password" placeholder="Password">
+                <input class="form-control" name="password" type="password" placeholder="Password">
             </div>
             <div class="form-group">
                 <div class="utility">
                     <div class="animated-checkbox">
                         <label>
-                            <input type="checkbox"><span class="label-text">Stay Signed in</span>
+                            <input type="checkbox" name="remember"><span class="label-text">Stay Signed in</span>
                         </label>
                     </div>
                     <p class="semibold-text mb-2"><a href="#" data-toggle="flip">Forgot Password ?</a></p>
                 </div>
+                <p class="my-1">Don't have an account?<a href="{% url 'Todo:register' %}"> Sign up </a></p>
             </div>
             <div class="form-group btn-container">
                 <button class="btn btn-primary btn-block g-recaptcha" data-sitekey="{{ site_key }}"
