@@ -1,7 +1,9 @@
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
+from django.core.validators import validate_email
 
 import requests
 
@@ -12,8 +14,15 @@ from .auth_methods import convert_to_hash
 # Create your views here.
 
 def Todo_todo(request):
-    context = {}
     if not request.session.get('login'):
+        return redirect(reverse('Todo:login'))
+    context = {}
+
+    try:
+        member = Member.objects.get(id=request.session.get('id'))
+        context.update({'user': member})
+    except Member.DoesNotExist:
+        messages.add_message(request, messages.ERROR, 'user not found please login again')
         return redirect(reverse('Todo:login'))
 
     return render(request, 'Todo.html', context)
@@ -81,6 +90,11 @@ def Todo_register(request):
             email = request.POST.get('email')
             password = request.POST.get('password')
             re_password = request.POST.get('re_password')
+
+            try:
+                validate_email(email)
+            except ValidationError:
+                messages.add_message(request, messages.ERROR, 'Email is not valid please write valid email')
 
             if password == re_password:
                 try:
