@@ -14134,7 +14134,7 @@ be a descendant of the grid when it is being dragged.
 
 ::selection {
     color: #FFF;
-    background-color: #00635a;
+    background-color: #1e96fc;
 }
 
 @media (min-width: 768px) {
@@ -15959,4 +15959,21 @@ be a descendant of the grid when it is being dragged.
 
 .username-icon {
     color: #000814
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .5rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1.5rem;
 }

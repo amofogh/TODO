@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
@@ -132,11 +133,20 @@ def Todo_add_task(request):
 
     if request.POST:
         user_id = request.session.get('id')
-        text = request.Post.get('text')
-        priority = request.Post.get('priority')
+        text = request.POST.get('text')
+        priority = request.POST.get('priority')
+        if priority:
+            try:
+                user = Member.objects.get(id=user_id)
+            except Member.DoesNotExist:
+                return JsonResponse({"error": 'User not found please login again'}, status=400)
 
-        Task.objects.create(user_id=user_id, text=text, priority=priority)
-        messages.add_message(request, messages.SUCCESS, 'Task added successfully')
+            Task.objects.create(user=user, text=text, priority=priority)
+            return JsonResponse({"message": 'Task added successfully'}, status=200)
+        else:
+            return JsonResponse({"error": 'Fill the priority field please'}, status=400)
+
+    return JsonResponse({"error": 'Task failed please try again'}, status=400)
 
 
 def Todo_check_Task(request):
@@ -152,9 +162,12 @@ def Todo_check_Task(request):
             task.done = bool(status)
             task.save()
             messages.add_message(request, messages.SUCCESS, 'Task updated successfully')
+            return True
 
         except Task.DoesNotExist:
             messages.add_message(request, messages.ERROR, 'Task Not FOund')
+
+    return False
 
 
 def Todo_edit_task(request):

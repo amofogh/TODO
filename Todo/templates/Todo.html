@@ -24,13 +24,74 @@
     <div class="row">
         <div class="col-md-12">
             <div class="tile">
+                <p class="h1 text-center mt-3 mb-4 pb-3 text-primary">
+                    <i class="fas fa-check-square me-1"></i>
+                    <u>My Todo-s</u>
+                </p>
+                <div class="pb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="POST" id="add-tasks"
+                                  class="d-flex flex-row justify-content-between align-items-center input-group">
+                                {% csrf_token %}
+                                <input type="text" class="form-control form-control-lg border-0" name="text"
+                                       autocomplete="" id="text" placeholder="Task...">
+                                <div class="col-3 d-flex justify-content-between align-items-center">
+                                    <select class="form-control mr-3" name="priority" id="priority">
+                                        <option value="" class="text-secondary" selected>Priority</option>
+                                        <option value="low">Low priority</option>
+                                        <option value="middle">Middle priority</option>
+                                        <option value="high">High priority</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary px-4 py-2">Add</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </main>
 {% include 'inc/_footerRefernces.html' %}
 <script src="{% static 'js/main.js' %}"></script>
-<!-- Page specific javascripts-->
+<script>
+    $("#add-tasks").submit(function (e) {
+        e.preventDefault();
+        var text = $("#text").val();
+        var priority = $("#priority").val();
+        var csrf = $('[name=csrfmiddlewaretoken]').val();
+        $.ajax({
+            type: "POST",
+            url: "/ajax/add-task/",
+            data: {
+                csrfmiddlewaretoken: csrf,
+                text: text,
+                priority: priority,
+            },
+            success: function (result) {
+                $("#text").val('')
+                $("#priority").val("")
+                $.notify({
+                    title: "Message : ",
+                    message: result['message'],
+                    icon: "fa-solid fa-check mr-2"
+                }, {
+                    type: "success"
+                });
+            },
+            error: function (response) {
+                $.notify({
+                    title: "Error : ",
+                    message: response["responseJSON"]["error"],
+                    icon: "fa-solid fa-xmark mr-2"
+                }, {
+                    type: "danger"
+                });
+            }
+        });
+    });
+</script>
 
 
 </body>
