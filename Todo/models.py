@@ -19,7 +19,7 @@ class Task(models.Model):
     user = models.ForeignKey(Member, on_delete=models.CASCADE)
     text = models.TextField()
     priority = models.CharField(max_length=20)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     done = models.BooleanField(default=False)
 
     def __str__(self):

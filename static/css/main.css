@@ -15977,3 +15977,7 @@ be a descendant of the grid when it is being dragged.
     flex: 1 1 auto;
     padding: 1.5rem;
 }
+
+.action {
+    font-size: 1.5em !important;
+}

@@ -22,10 +22,12 @@ def Todo_todo(request):
     try:
         member = Member.objects.get(id=request.session.get('id'))
         context.update({'user': member})
+
+        user_tasks = Task.objects.filter(user=member)
+        context.update({'tasks': user_tasks})
     except Member.DoesNotExist:
         messages.add_message(request, messages.ERROR, 'user not found please login again')
         return redirect(reverse('Todo:login'))
-
     return render(request, 'Todo.html', context)
 
 
@@ -64,6 +66,7 @@ def Todo_login(request):
                     if password == member.password:
                         request.session['login'] = True
                         request.session['id'] = member.id
+                        request.session.set_expiry(0)
                         if remember:
                             request.session.set_expiry(48 * 60 * 60)
 
@@ -140,9 +143,10 @@ def Todo_add_task(request):
                 user = Member.objects.get(id=user_id)
             except Member.DoesNotExist:
                 return JsonResponse({"error": 'User not found please login again'}, status=400)
-
-            Task.objects.create(user=user, text=text, priority=priority)
-            return JsonResponse({"message": 'Task added successfully'}, status=200)
+            new_task = Task.objects.create(user=user, text=text, priority=priority)
+            return JsonResponse({"message": 'Task added successfully',
+                                 'task_date': f'{new_task.date.year}/{new_task.date.month}/{new_task.date.day}',
+                                 'task_time': f'{new_task.date.hour}:{new_task.date.minute}', }, status=200)
         else:
             return JsonResponse({"error": 'Fill the priority field please'}, status=400)
 
