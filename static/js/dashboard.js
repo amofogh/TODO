@@ -1,5 +1,4 @@
-function addTask(e) {
-    e.preventDefault();
+function addTask() {
     let text = $("#text").val();
     let priority = $("#priority").val();
     let csrf = $('[name=csrfmiddlewaretoken]').val();
@@ -15,7 +14,7 @@ function addTask(e) {
             success: function (result) {
                 $("#text").val('')
                 $("#priority").val("Low")
-                var priority_class = 'bg-info'
+                let priority_class = 'bg-info'
                 if (priority === 'Low') {
                     priority_class = 'bg-success'
                 } else if (priority === 'Middle') {
@@ -30,7 +29,6 @@ function addTask(e) {
                 let priority_tag = $(`<td class=" text-left"><span class="badge text-light p-2 ${priority_class}"> ${priority} priority </span></td>`)
                 let date = $(`<td> ${result['task_date']} ${result['task_time']} </td>`)
                 let actions = $(`<td> <div class="d-flex justify-content-center align-items-center">  <a href="#" class="action"><i class="fa-solid fa-pen text-info mr-3"></i></a> <a href="#" class="action"><i class="fa-solid fa-trash-can text-danger "></i></a> </div> </td>`)
-
 
                 tr.append(checkbox)
                 tr.append(taskText)
@@ -48,9 +46,6 @@ function addTask(e) {
                 });
             },
             error: function (xhr, status, error) {
-                console.log(xhr)
-                console.log(status)
-                console.log(error)
                 $.notify({
                     title: "Error : ",
                     message: xhr.responseJSON.error,
@@ -69,10 +64,11 @@ function addTask(e) {
     }
 }
 
-$("#add-tasks").submit(addTask)
+// $("#add-tasks").submit(addTask)
+$('#add-task').click(addTask)
 
 $("#text").keyup(function (event) {
     if (event.keyCode === 13) {
-        addTask(event)
+        addTask()
     }
 });

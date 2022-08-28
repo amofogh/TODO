@@ -30,25 +30,25 @@
                 <div class="pb-2">
                     <div class="card">
                         <div class="card-body">
-                            <form method="POST" id="add-tasks"
+                            <div id="add-tasks"
                                   class="d-flex flex-row justify-content-between align-items-center input-group">
                                 {% csrf_token %}
                                 <input type="text" class="form-control form-control-lg border-0" name="text"
-                                       autocomplete="" id="text" placeholder="Task...">
+                                       autocomplete="off" id="text" placeholder="Task...">
                                 <div class="col-3 d-flex justify-content-between align-items-center">
                                     <select class="form-control mr-3" name="priority" id="priority">
                                         <option selected value="Low">Low priority</option>
                                         <option value="Middle">Middle priority</option>
                                         <option value="High">High priority</option>
                                     </select>
-                                    <button type="submit" class="btn btn-primary px-4 py-2">Add</button>
+                                    <button type="button" id="add-task" class="btn btn-primary px-4 py-2">Add</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="tile">
-                    <h3 class="tile-title"><i class="fas fa-tasks text-muted mr-2"></i>Task List</h3>
+                    <h3 class="tile-title"><i class="fa-duotone  fa-tasks text-muted mr-2"></i>Task List</h3>
                     <table class="table table-hover text-center">
                         <thead>
                         <tr>
