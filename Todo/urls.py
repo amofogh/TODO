@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout/', Todo_logout, name='logout'),
 
     path('ajax/add-task/', Todo_add_task, name='add_task'),
+    path('ajax/check-task/', Todo_check_Task, name='check_task'),
 
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
 ]

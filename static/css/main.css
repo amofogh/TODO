@@ -15981,3 +15981,7 @@ be a descendant of the grid when it is being dragged.
 .action {
     font-size: 1.5em !important;
 }
+
+.line-trough {
+    text-decoration: line-through !important;
+}

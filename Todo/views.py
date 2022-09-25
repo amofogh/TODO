@@ -144,7 +144,7 @@ def Todo_add_task(request):
             except Member.DoesNotExist:
                 return JsonResponse({"error": 'User not found please login again'}, status=400)
             new_task = Task.objects.create(user=user, text=text, priority=priority)
-            return JsonResponse({"message": 'Task added successfully',
+            return JsonResponse({"message": 'Task added successfully', "task_id": new_task.id,
                                  'task_date': f'{new_task.date.year}/{new_task.date.month}/{new_task.date.day}',
                                  'task_time': f'{new_task.date.hour}:{new_task.date.minute}', }, status=200)
         else:
@@ -163,15 +163,15 @@ def Todo_check_Task(request):
 
         try:
             task = Task.objects.get(id=task_id)
+            if status == 'false':
+                status = False
             task.done = bool(status)
             task.save()
             messages.add_message(request, messages.SUCCESS, 'Task updated successfully')
-            return True
+            return JsonResponse({"message": 'Task updated successfully'}, status=200)
 
         except Task.DoesNotExist:
-            messages.add_message(request, messages.ERROR, 'Task Not FOund')
-
-    return False
+            return JsonResponse({"error": 'Task Not FOund'}, status=404)
 
 
 def Todo_edit_task(request):
